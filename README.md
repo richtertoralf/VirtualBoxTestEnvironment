@@ -24,10 +24,26 @@ iface eth2 inet static
 ```
 
 ### IP forwarding
-Aktivieren der IP-Weiterleitung im Linux Kernel
+Aktivieren der IP-Weiterleitung im Linux Kernel  
+Editiere die Datei `/etc/sysctl.conf` 
+```
+# Uncomment the next line to enable packet forwarding for IPv4
+net.ipv4.ip_forward=1
+
+# Uncomment the next line to enable packet forwarding for IPv6
+#  Enabling this option disables Stateless Address Autoconfiguration
+#  based on Router Advertisements for this host
+net.ipv6.conf.all.forwarding=1
+```
+Mit `sysctl -p` solltest du jetzt diese Ausgabe bekommen:  
+```
+net.ipv4.ip_forward = 1
+net.ipv6.conf.all.forwarding = 1
+```
+
 ### Konfigurieren der Routing-Software
-Folgende drei Varianten nutze ich dazu: iptables, nftables oder Firewalld
-#### iptables
+Folgende drei Varianten kannst du nutzen: `iptables`, `nftables` oder `Firewalld`
+#### iptables (traditionell)
 #### nftables
 #### Firewalld
 ## simpler DHCP-Server
