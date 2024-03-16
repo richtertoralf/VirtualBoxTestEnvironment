@@ -11,17 +11,31 @@ In Debian wird die Datei `/etc/network/interfaces` verwendet, um Netzwerkschnitt
 ```
 auto eth0
 iface eth0 inet dhcp
+iface eth0 inet6 auto
 
 auto eth1
 iface eth1 inet static
-  address 192.168.100.1
-  netmask 255.255.255.0
+    address 192.168.100.1
+    netmask 255.255.255.0
+
+iface eth1 inet6 static
+    address fd00::192:168:100::1
+    netmask 64
 
 auto eth2
 iface eth2 inet static
-  address 192.168.200.1
-  netmask 255.255.255.0
+    address 192.168.200.1
+    netmask 255.255.255.0
+
+iface eth2 inet6 static
+    address fd00::192:168:200::1
+    netmask 64
 ```
+eth0: Dies ist die Schnittstelle, die mit dem Internet verbunden ist und eine IPv4-Adresse über DHCP bezieht. Die IPv6-Adresse wird automatisch konfiguriert.
+
+eth1 und eth2: Dies sind die internen Schnittstellen, die mit den internen Netzwerken verbunden sind. Sie sind statisch konfiguriert sowohl für IPv4 als auch für IPv6.
+
+Die IPv4-Adressen 192.168.100.1 und 192.168.200.1 sind die Gateway-Adressen für die internen Netzwerke, und die entsprechenden IPv6-Adressen fd00::192:168:100::1 und fd00::192:168:200::1 sind die ULAs für die internen Netzwerke.
 
 ### IP forwarding
 Aktivieren der IP-Weiterleitung im Linux Kernel  
