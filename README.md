@@ -7,6 +7,7 @@ Testumgebungen in VirtualBox bauen
 ## simpler virtueller Debian Router
 ![simple Testumgebung / Router mit zwei Subnetzen und DHCP](https://github.com/richtertoralf/VirtualBoxTestEnvironment/blob/24660940c16c5e3eb00373b97982ac7ac37586ea/VB_TestEnvironment_01.jpg)
 ### NIC planen und konfigurieren
+**Das folgende als user `root`erledigen: `su -`**  
 In Debian wird die Datei `/etc/network/interfaces` verwendet, um Netzwerkschnittstellen zu konfigurieren.
 ```
 auto eth0
@@ -87,3 +88,22 @@ firewall-cmd --reload
 ```
 
 ## simpler DHCP-Server
+### dnsmasq
+```
+sudo apt install dnsmasq
+```
+Konfigurationsdatei `/etc/dnsmasq.conf` editieren  
+Einfach das Folgende oben einfügen:
+```
+interface=eth1  # 1. Schnittstelle, auf der dnsmasq lauscht
+listen-address=127.0.0.1  # IP-Adresse, auf der dnsmasq lauscht (lokal)
+dhcp-range=192.168.100.100,192.168.100.200,240h  # DHCP-Adressbereich und Lease-Zeit
+
+interface=eth2  # 2. Schnittstelle, auf der dnsmasq lauscht
+listen-address=127.0.0.1  # IP-Adresse, auf der dnsmasq lauscht (lokal)
+dhcp-range=192.168.200.100,192.168.200.200,240h  # DHCP-Adressbereich und Lease-Zeit
+```
+Speichere die Datei und starte dnsmasq neu, damit die Änderungen wirksam werden:
+```
+systemctl restart dnsmasq
+```
