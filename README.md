@@ -5,6 +5,7 @@ Testumgebungen in VirtualBox bauen
 >Bei längerfristigen Projekten nutze ich für das Ausrollen der Testumgebung Vagrant oder Ansible. Manchmal muss es aber auch mal schnell per Hand gemacht werden. Dazu im Folgenden paar Beispiele
 
 ## simpler virtueller Debian Router
+![simple Testumgebung / Router mit zwei Subnetzen und DHCP](https://github.com/richtertoralf/VirtualBoxTestEnvironment/blob/24660940c16c5e3eb00373b97982ac7ac37586ea/VB_TestEnvironment_01.jpg)
 ### NIC planen und konfigurieren
 ### IP forwarding
 Aktivieren der IP-Weiterleitung im Linux Kernel
