@@ -75,4 +75,15 @@ sudo ip6tables-save > /etc/iptables/rules.v6
 ```
 #### nftables
 #### Firewalld
+```
+apt-get install firewalld
+systemctl start firewalld
+systemctl enable firewalld
+firewall-cmd --add-masquerade --permanent   # IPv4 NAT
+firewall-cmd --add-masquerade --permanent --zone=trusted --add-interface=eth1   # IPv4 NAT für internes Netzwerk
+firewall-cmd --add-masquerade --permanent --zone=trusted --add-interface=eth2   # IPv4 NAT für internes Netzwerk
+firewall-cmd --add-masquerade --permanent --ipv6   # IPv6 NAT
+firewall-cmd --reload
+```
+
 ## simpler DHCP-Server
