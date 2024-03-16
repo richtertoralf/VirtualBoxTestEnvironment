@@ -1,13 +1,13 @@
 # VirtualBoxTestEnvironment
 Testumgebungen in VirtualBox bauen
->Ab und zu entwickle ich Software mit der zwischen verschiedenen Maschinen Daten ausgetauscht werden soll, also Software für verteilte Systeme.
+>Ab und zu entwickle ich Software, mit der zwischen verschiedenen Maschinen Daten ausgetauscht werden soll, also Software für verteilte Systeme.
 >Für die Softwareentwicklung und das Testen dieser Software benötige ich Testumgebungen, die oft aus mehreren Computern und Routern bestehen.
 >Bei längerfristigen Projekten nutze ich für das Ausrollen der Testumgebung Vagrant oder Ansible. Manchmal muss es aber auch mal schnell per Hand gemacht werden. Dazu im Folgenden paar Beispiele
 
 ## einfacher virtueller Debian-Router
 ![simple Testumgebung / Router mit zwei Subnetzen und DHCP](https://github.com/richtertoralf/VirtualBoxTestEnvironment/blob/24660940c16c5e3eb00373b97982ac7ac37586ea/VB_TestEnvironment_01.jpg)
 ### Netzwerkadapter planen und konfigurieren
-**Das folgende als Benutzer `root`erledigen: `su -`**  
+**Das Folgende als Benutzer `root`erledigen: `su -`**  
 In Debian wird die Datei `/etc/network/interfaces` verwendet, um Netzwerkschnittstellen zu konfigurieren.
 ```
 auto eth0
