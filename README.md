@@ -20,7 +20,7 @@ iface eth1 inet static
     netmask 255.255.255.0
 
 iface eth1 inet6 static
-    address fd00::192:168:100::1
+    address fd00::192:168:100:1
     netmask 64
 
 auto eth2
@@ -29,7 +29,7 @@ iface eth2 inet static
     netmask 255.255.255.0
 
 iface eth2 inet6 static
-    address fd00::192:168:200::1
+    address fd00::192:168:200:1
     netmask 64
 ```
 eth0: Dies ist die Schnittstelle, die mit dem Internet verbunden ist und eine IPv4-Adresse über DHCP bezieht. Die IPv6-Adresse wird automatisch konfiguriert.
