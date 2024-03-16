@@ -4,10 +4,10 @@ Testumgebungen in VirtualBox bauen
 >Für die Softwareentwicklung und das Testen dieser Software benötige ich Testumgebungen, die oft aus mehreren Computern und Routern bestehen.
 >Bei längerfristigen Projekten nutze ich für das Ausrollen der Testumgebung Vagrant oder Ansible. Manchmal muss es aber auch mal schnell per Hand gemacht werden. Dazu im Folgenden paar Beispiele
 
-## simpler virtueller Debian Router
+## einfacher virtueller Debian-Router
 ![simple Testumgebung / Router mit zwei Subnetzen und DHCP](https://github.com/richtertoralf/VirtualBoxTestEnvironment/blob/24660940c16c5e3eb00373b97982ac7ac37586ea/VB_TestEnvironment_01.jpg)
-### NIC planen und konfigurieren
-**Das folgende als user `root`erledigen: `su -`**  
+### Netzwerkadapter planen und konfigurieren
+**Das folgende als Benutzer `root`erledigen: `su -`**  
 In Debian wird die Datei `/etc/network/interfaces` verwendet, um Netzwerkschnittstellen zu konfigurieren.
 ```
 auto eth0
@@ -38,7 +38,7 @@ eth1 und eth2: Dies sind die internen Schnittstellen, die mit den internen Netzw
 
 Die IPv4-Adressen 192.168.100.1 und 192.168.200.1 sind die Gateway-Adressen für die internen Netzwerke, und die entsprechenden IPv6-Adressen fd00::192:168:100::1 und fd00::192:168:200::1 sind die ULAs für die internen Netzwerke.
 
-### IP forwarding
+### IP forwarding / IP-Weiterleitung aktivieren
 Aktivieren der IP-Weiterleitung im Linux Kernel  
 Editiere die Datei `/etc/sysctl.conf` 
 ```
@@ -75,6 +75,8 @@ sudo iptables-save > /etc/iptables/rules.v4
 sudo ip6tables-save > /etc/iptables/rules.v6
 ```
 #### nftables
+Ist mir jetzt gerade zu umständlich ;-)
+
 #### Firewalld
 ```
 apt-get install firewalld
@@ -87,7 +89,7 @@ firewall-cmd --add-masquerade --permanent --ipv6   # IPv6 NAT
 firewall-cmd --reload
 ```
 
-## simpler DHCP-Server
+## einfacher DHCP-Server
 ### dnsmasq
 ```
 sudo apt install dnsmasq
