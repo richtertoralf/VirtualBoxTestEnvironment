@@ -58,6 +58,21 @@ net.ipv6.conf.all.forwarding = 1
 ### Konfigurieren der Routing-Software
 Folgende drei Varianten kannst du nutzen: `iptables`, `nftables` oder `Firewalld`
 #### iptables (traditionell)
+```
+apt-get install iptables iptables-persistent
+
+# IPv4-Regeln
+iptables -A FORWARD -j ACCEPT
+iptables -t nat -A POSTROUTING -j MASQUERADE
+
+# IPv6-Regeln
+ip6tables -A FORWARD -j ACCEPT
+ip6tables -t nat -A POSTROUTING -j MASQUERADE
+
+# Speichern der Regeln
+sudo iptables-save > /etc/iptables/rules.v4
+sudo ip6tables-save > /etc/iptables/rules.v6
+```
 #### nftables
 #### Firewalld
 ## simpler DHCP-Server
