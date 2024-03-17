@@ -100,12 +100,12 @@ Einfach das Folgende oben einfügen:
 interface=eth1  # 1. Schnittstelle, auf der dnsmasq lauscht
 listen-address=127.0.0.1  # IP-Adresse, auf der dnsmasq lauscht (lokal)
 dhcp-range=192.168.100.100,192.168.100.200,240h  # IPv4 DHCP-Adressbereich und Lease-Zeit
-dhcp-range=fd00::192:168:100:100,fd00::192:168:100:200,constructor:eth1,ra-stateless,240h  # IPv6 DHCP-Adressbereich und Lease-Zeit
+dhcp-range=fd00::192:168:100:100,fd00::192:168:100:1ff,constructor:eth1,ra-names,slaac,240h  # IPv6 DHCP-Adressbereich und Lease-Zeit
 
 interface=eth2  # 2. Schnittstelle, auf der dnsmasq lauscht
 listen-address=127.0.0.1  # IP-Adresse, auf der dnsmasq lauscht (lokal)
 dhcp-range=192.168.200.100,192.168.200.200,240h  # IPv4 DHCP-Adressbereich und Lease-Zeit
-dhcp-range=fd00::192:168:200:100,fd00::192:168:200:200,constructor:eth2,ra-stateless,240h  # IPv6 DHCP-Adressbereich und Lease-Zeit
+dhcp-range=fd00::192:168:200:100,fd00::192:168:200:1ff,constructor:eth2,ra-names,slaac,240h  # IPv6 DHCP-Adressbereich und Lease-Zeit
 
 ```
 Speichere die Datei und starte dnsmasq neu, damit die Änderungen wirksam werden:
