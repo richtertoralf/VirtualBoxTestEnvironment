@@ -164,8 +164,8 @@ dhcp-range=192.168.200.100,192.168.200.200,24h
 dhcp-range=fd00::c0a8:c801,fd00::c0a8:c8ff,24h
 ```
 #### Probleme mit ipv6
-Damit die Cients ihre "fd00:xxxxxxx" Adressen vom DHCP Server beziehen, muss ich auf den Clients jeweils `dhclient -6 -v enp0s3` durchführen.   
-Alternativ kann ich auf dem Router/DHCP-Server Folgendes installieren:
+Damit die Cients ihre "fd00:xxxxxxx" Adressen vom dnsmasq DHCP Server beziehen, muss ich auf den Clients jeweils `dhclient -6 -v enp0s3` durchführen. Da fehlt noch was in der Konfiguration des Routers.    
+Alternativ kann ich auf dem Router auch `radvd` installieren:
 ```
 apt install radvd
 ```
@@ -196,3 +196,4 @@ und anschließend:
 ```
 systemctl restart radvd.service
 ```
+Allerdings werden damit die `FD00` Adressen von dnsmasq überschrieben. Die gleichzeitige Verwendung von dnsmasq und radvd für IPV6 scheint keine gute Idee zu sein?
