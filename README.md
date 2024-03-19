@@ -124,5 +124,37 @@ dhcp-range=fd00::c0a8:c801,fd00::c0a8:c8ff,24h  # IPv6 DHCP-Adressbereich und Le
 ```
 Speichere die Datei und starte dnsmasq neu, damit die Änderungen wirksam werden:
 ```
+# Syntax der /etc/dnsmasq.conf testen:
+dnsmasq --test
+# dnsmasq neu starten:
 systemctl restart dnsmasq
+```
+meine Konfiguration enthält zusätzlich noch Festlegungen zur lokalen Domain und vergibt feste IP-Adressen für einen Server im LAN 1:
+```
+# LAN 1
+interface=enp0s8
+domain-needed
+bogus-priv
+local=/intnet100/
+domain=intnet100
+listen-address=127.0.0.1
+listen-address=192.168.100.1
+listen-address=fd00::c0a8:6401
+dhcp-range=192.168.100.100,192.168.100.200,24h
+dhcp-range=fd00::c0a8:6401,fd00::c0a8:64ff,24h
+# static ip für einzelnen Server im LAN Subnetz
+dhcp-host=08:00:27:7a:9d:a7,ubuntu2204server01,192.168.100.101
+dhcp-host=08:00:27:7a:9d:a7,ubuntu2204server01,[fd00::c0a8:6465]
+
+# LAN 2
+interface=enp0s9
+domain-needed
+bogus-priv
+local=/intnet200/
+domain=intnet200
+listen-address=127.0.0.1
+listen-address=192.168.200.1
+listen-address=fd00::c0a8:c801
+dhcp-range=192.168.200.100,192.168.200.200,24h
+dhcp-range=fd00::c0a8:c801,fd00::c0a8:c8ff,24h
 ```
