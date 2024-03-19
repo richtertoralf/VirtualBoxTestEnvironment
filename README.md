@@ -163,3 +163,36 @@ listen-address=fd00::c0a8:c801
 dhcp-range=192.168.200.100,192.168.200.200,24h
 dhcp-range=fd00::c0a8:c801,fd00::c0a8:c8ff,24h
 ```
+#### Probleme mit ipv6
+Damit die Cients ihre "fd00:xxxxxxx" Adressen vom DHCP Server beziehen, muss ich auf den Clients jeweils `dhclient -6 -v enp0s3` durchführen.   
+Alternativ kann ich auf dem Router/DHCP-Server Folgendes installieren:
+```
+apt install radvd
+```
+und eine Konfigurationsdatei anlegen:
+```
+tori@debianRouter:~$ cat /etc/radvd.conf
+interface enp0s8
+{
+    AdvSendAdvert on;
+    prefix fd00::/64
+    {
+        AdvOnLink on;
+        AdvAutonomous on;
+    };
+};
+
+interface enp0s9
+{
+    AdvSendAdvert on;
+    prefix fd00::/64
+    {
+        AdvOnLink on;
+        AdvAutonomous on;
+    };
+};
+```
+und anschließend:
+```
+systemctl restart radvd.service
+```
