@@ -6,6 +6,12 @@ Testumgebungen in VirtualBox bauen
 
 ## einfacher virtueller Debian-Router
 ![simple Testumgebung / Router mit zwei Subnetzen und DHCP](https://github.com/richtertoralf/VirtualBoxTestEnvironment/blob/24660940c16c5e3eb00373b97982ac7ac37586ea/VB_TestEnvironment_01.jpg)
+
+Anstatt der alten Bezeichnungen der Netzwerkschnittstellen (eth0, eth1 und eth2) oben im Bild, verwende ich die moderneren "Predictable Network Interface Names", die anhand ihrer physischen Eigenschaften und Position auf dem Motherboard benannt werden. Dies führt zu konsistenteren und vorhersehbareren Namen, insbesondere in Umgebungen mit mehreren Netzwerkschnittstellen oder bei der Verwendung von Virtualisierungstechnologien.  
+eth0 -> enp0s3  
+eth1 -> enp0s8  
+eth2 -> enp0s9  
+
 ### Netzwerkadapter planen und konfigurieren
 **Das Folgende als Benutzer `root`erledigen: `su -`**  
 In Debian wird die Datei `/etc/network/interfaces` verwendet, um Netzwerkschnittstellen zu konfigurieren.
