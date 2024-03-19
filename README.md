@@ -37,9 +37,9 @@ iface enp0s9 inet static
 iface enp0s9 inet6 static
     address fd00::c0a8:c801/64
 ```
-enp0s3: Diese Schnittstelle ist mit dem Internet verbunden (WAN) und bezieht ihre IPv4-Adresse über DHCP. Die IPv6-Adresse wird automatisch konfiguriert.
+**enp0s3**: Diese Schnittstelle ist mit dem Internet verbunden (WAN) und bezieht ihre IPv4-Adresse über DHCP. Die IPv6-Adresse wird automatisch konfiguriert.
 
-enp0s8 und enp0s9: Diese internen Schnittstellen sind mit den internen Netzwerken verbunden (LAN). Sie sind sowohl für IPv4 als auch für IPv6 statisch konfiguriert.
+**enp0s8 und enp0s9**: Diese internen Schnittstellen sind mit den internen Netzwerken verbunden (LAN). Sie sind sowohl für IPv4 als auch für IPv6 statisch konfiguriert.
 
 Die IPv4-Adressen 192.168.100.1 und 192.168.200.1 fungieren als Gateway-Adressen für die internen Netzwerke. Die entsprechenden IPv6-Adressen fd00::c0a8:6401 und fd00::c0a8:c801 sind Unique Local Addresses (ULAs) für die internen Netzwerke.
 
