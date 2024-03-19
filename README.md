@@ -10,36 +10,39 @@ Testumgebungen in VirtualBox bauen
 **Das Folgende als Benutzer `root`erledigen: `su -`**  
 In Debian wird die Datei `/etc/network/interfaces` verwendet, um Netzwerkschnittstellen zu konfigurieren.
 ```
-auto eth0
-iface eth0 inet dhcp
-iface eth0 inet6 auto
+# WAN interface
+auto enp0s3
+iface enp0s3 inet dhcp
+iface enp0s3 inet6 auto
 
-auto eth1
-iface eth1 inet static
+# LAN interface 1
+auto enp0s8
+iface enp0s8 inet static
     address 192.168.100.1
     netmask 255.255.255.0
+iface enp0s8 inet6 static
+    address fd00::c0a8:6401/64
 
-iface eth1 inet6 static
-    address fd00::192:168:100:1
-    netmask 64
-
-auto eth2
-iface eth2 inet static
+# LAN interface 2
+auto enp0s9
+iface enp0s9 inet static
     address 192.168.200.1
     netmask 255.255.255.0
-
-iface eth2 inet6 static
-    address fd00::192:168:200:1
-    netmask 64
+iface enp0s9 inet6 static
+    address fd00::c0a8:c801/64
 ```
-eth0: Dies ist die Schnittstelle, die mit dem Internet verbunden ist und eine IPv4-Adresse über DHCP bezieht. Die IPv6-Adresse wird automatisch konfiguriert.
+enp0s3: Diese Schnittstelle ist mit dem Internet verbunden (WAN) und bezieht ihre IPv4-Adresse über DHCP. Die IPv6-Adresse wird automatisch konfiguriert.
 
-eth1 und eth2: Dies sind die internen Schnittstellen, die mit den internen Netzwerken verbunden sind. Sie sind statisch konfiguriert sowohl für IPv4 als auch für IPv6.
+enp0s8 und enp0s9: Diese internen Schnittstellen sind mit den internen Netzwerken verbunden (LAN). Sie sind sowohl für IPv4 als auch für IPv6 statisch konfiguriert.
 
-Die IPv4-Adressen 192.168.100.1 und 192.168.200.1 sind die Gateway-Adressen für die internen Netzwerke, und die entsprechenden IPv6-Adressen fd00::192:168:100::1 und fd00::192:168:200::1 sind die ULAs für die internen Netzwerke.
+Die IPv4-Adressen 192.168.100.1 und 192.168.200.1 fungieren als Gateway-Adressen für die internen Netzwerke. Die entsprechenden IPv6-Adressen fd00::c0a8:6401 und fd00::c0a8:c801 sind Unique Local Addresses (ULAs) für die internen Netzwerke.
+
+Die IPv4-Adressen wurden für die Umrechnung in IPv6-Adressen entsprechend dem Unique Local Address-Bereich (fd00::/8) verwendet, indem ich einfach die IPv4-Adressen in hexadezimale Notation umgewandelt habe. Zum Beispiel wird die IPv4-Adresse 192.168.100.1 in IPv6-Adresse fd00::c0a8:6401 umgewandelt.
 
 ### IP forwarding / IP-Weiterleitung aktivieren
-Aktivieren der IP-Weiterleitung im Linux Kernel  
+Aktivieren der IP-Weiterleitung im Linux Kernel
+>Das Aktivieren der IP-Weiterleitung im Linux Kernel ist erforderlich, um Datenverkehr zwischen den internen Netzwerken und dem Internet weiterzuleiten. Ohne IP-Weiterleitung würde der Router den Datenverkehr nicht zwischen den verschiedenen Schnittstellen weiterleiten können, was zu einer isolierten Kommunikation zwischen den Netzwerken führen würde.
+
 Editiere die Datei `/etc/sysctl.conf` 
 ```
 # Uncomment the next line to enable packet forwarding for IPv4
@@ -90,22 +93,28 @@ firewall-cmd --reload
 ```
 
 ## einfacher DHCP-Server
+>Ein DHCP-Server ermöglicht die automatische Zuweisung von IP-Adressen und anderen Netzwerkkonfigurationsinformationen an Clients in einem Netzwerk. Dnsmasq ist eine leichtgewichtige und vielseitige Software, die DHCP-Dienste sowie DNS-Forwarding und Caching bereitstellen kann, was sie meines Erachtens ideal für den Einsatz in kleinen Netzwerken oder Testumgebungen macht.
+
 ### dnsmasq
 ```
 sudo apt install dnsmasq
 ```
 Konfigurationsdatei `/etc/dnsmasq.conf` editieren  
-Einfach das Folgende oben einfügen:
+bzw. einfach das Folgende oben einfügen:
 ```
-interface=eth1  # 1. Schnittstelle, auf der dnsmasq lauscht
+interface=enp0s8  # 1. Schnittstelle, auf der dnsmasq lauscht
 listen-address=127.0.0.1  # IP-Adresse, auf der dnsmasq lauscht (lokal)
-dhcp-range=192.168.100.100,192.168.100.200,240h  # IPv4 DHCP-Adressbereich und Lease-Zeit
-dhcp-range=fd00::192:168:100:100,fd00::192:168:100:200,240h  # IPv6 DHCP-Adressbereich und Lease-Zeit
+listen-address=192.168.100.1  # IP-Adresse des LAN-Interfaces
+listen-address=fd00::c0a8:6401  # IPv6-Adresse des LAN-Interfaces
+dhcp-range=192.168.100.100,192.168.100.200,24h  # IPv4 DHCP-Adressbereich und Lease-Zeit
+dhcp-range=fd00::c0a8:6401,fd00::c0a8:64ff,24h  # IPv6 DHCP-Adressbereich und Lease-Zeit
 
-interface=eth2  # 2. Schnittstelle, auf der dnsmasq lauscht
+interface=enp0s9  # 2. Schnittstelle, auf der dnsmasq lauscht
 listen-address=127.0.0.1  # IP-Adresse, auf der dnsmasq lauscht (lokal)
-dhcp-range=192.168.200.100,192.168.200.200,240h  # IPv4 DHCP-Adressbereich und Lease-Zeit
-dhcp-range=fd00::192:168:200:100,fd00::192:168:200:200,240h  # IPv6 DHCP-Adressbereich und Lease-Zeit
+listen-address=192.168.200.1  # IP-Adresse des LAN-Interfaces
+listen-address=fd00::c0a8:c801  # IPv6-Adresse des LAN-Interfaces
+dhcp-range=192.168.200.100,192.168.200.200,24h  # IPv4 DHCP-Adressbereich und Lease-Zeit
+dhcp-range=fd00::c0a8:c801,fd00::c0a8:c8ff,24h  # IPv6 DHCP-Adressbereich und Lease-Zeit
 ```
 Speichere die Datei und starte dnsmasq neu, damit die Änderungen wirksam werden:
 ```
