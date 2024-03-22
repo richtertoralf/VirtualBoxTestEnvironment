@@ -171,13 +171,15 @@ Diese Adressen gehören zum Unique Local Address (ULA)-Bereich und sind für pri
 Die IPv4-Adresse für das LAN-Interface ist 192.168.200.1, und der DHCP-Bereich ist von 192.168.200.100 bis 192.168.200.200.  
 Die IPv6-Adresse für das LAN-Interface ist fd00::c0a8:c801, und der DHCP-Bereich ist im fd00::c0a8:c864 bis fd00::c0a8:c8c8 Bereich.
 
-wichtig ist außerdem:  
+wichtig ist:  
 
 **enable-ra - Router Advertisement (RA) einschalten**  
 
 Diese Option aktiviert das Senden von Router Advertisements (RA) für IPv6 im Netzwerk. RA-Nachrichten sind wichtig für IPv6-Netzwerke, da sie Clients darüber informieren, dass ein Router verfügbar ist und welche Adresskonfigurationsparameter (wie z. B. die Präfixlänge) verwendet werden sollen. RA-Nachrichten sind für den ordnungsgemäßen Betrieb von IPv6-Netzwerken unerlässlich, insbesondere wenn Stateless Address Autoconfiguration (SLAAC) verwendet wird, um IPv6-Adressen automatisch zuzuweisen.  
 
-**dhcp-authoritative - authoritative DHCP mode (optional)**  
+Das Folgende ist optional:  
+
+**dhcp-authoritative - authoritative DHCP mode**  
 
 Diese Option gibt dnsmasq die letzte Autorität für DHCP-Anfragen auf dem jeweiligen Interface. Wenn mehr als ein DHCP-Server im Netzwerk vorhanden ist, könnte es zu Konflikten kommen, wenn beide Server auf Anfragen antworten. Durch die Verwendung des dhcp-authoritative-Flags stellt dnsmasq sicher, dass seine Antworten auf DHCP-Anfragen priorisiert werden. Dies ist besonders wichtig, wenn dnsmasq als zentraler DHCP-Server in Ihrem Netzwerk verwendet wird, um sicherzustellen, dass die Konfiguration einheitlich ist und um Konflikte mit anderen DHCP-Servern zu vermeiden.  
 
