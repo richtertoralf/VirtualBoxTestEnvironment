@@ -48,7 +48,14 @@ Mit `ifup --all --verbose` kannst du vorher einen Test durchführen.
 
 Die IPv4-Adressen 192.168.100.1 und 192.168.200.1 fungieren als Gateway-Adressen für die internen Netzwerke. Die entsprechenden IPv6-Adressen fd00::c0a8:6401 und fd00::c0a8:c801 sind Unique Local Addresses (ULAs) für die internen Netzwerke.
 
-Die IPv4-Adressen wurden für die Umrechnung in IPv6-Adressen entsprechend dem Unique Local Address-Bereich (fd00::/8) verwendet, indem ich einfach die IPv4-Adressen in hexadezimale Notation umgewandelt habe. Zum Beispiel wird die IPv4-Adresse 192.168.100.1 in IPv6-Adresse fd00::c0a8:6401 umgewandelt.
+Die IPv4-Adressen wurden für die Umrechnung in IPv6-Adressen entsprechend dem Unique Local Address-Bereich (fd00::/8) verwendet, indem ich einfach die IPv4-Adressen in hexadezimale Notation umgewandelt habe. Zum Beispiel wird die IPv4-Adresse 192.168.100.1 in IPv6-Adresse fd00::c0a8:6401 umgewandelt.  
+| Dezimal | Hexadezimal |
+|---------|-------------|
+| 192     | C0          |
+| 168     | A8          |
+| 100     | 64          |
+| 1       | 01          |
+
 
 ### IP forwarding / IP-Weiterleitung aktivieren
 Aktivieren der IP-Weiterleitung im Linux Kernel
