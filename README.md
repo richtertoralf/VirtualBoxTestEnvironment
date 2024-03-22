@@ -112,24 +112,39 @@ sudo apt install dnsmasq
 ```
 Konfigurationsdatei `/etc/dnsmasq.conf` editieren  
 bzw. einfach das Folgende oben einfügen:
+
+meine Konfiguration enthält zusätzlich noch Festlegungen zur lokalen Domain und vergibt feste IP-Adressen für einen Server im LAN 1:
 ```
+# LAN 1
 interface=enp0s8  # 1. Schnittstelle, auf der dnsmasq lauscht
+domain-needed
+bogus-priv
+local=/intnet100/
+domain=intnet100
 listen-address=127.0.0.1  # IP-Adresse, auf der dnsmasq lauscht (lokal)
 listen-address=192.168.100.1  # IP-Adresse des LAN-Interfaces
 listen-address=fd00::c0a8:6401  # IPv6-Adresse des LAN-Interfaces
 dhcp-range=192.168.100.100,192.168.100.200,24h  # IPv4 DHCP-Adressbereich und Lease-Zeit
-dhcp-range=fd00::c0a8:6401,fd00::c0a8:64ff,24h  # IPv6 DHCP-Adressbereich und Lease-Zeit
+dhcp-range=fd00::c0a8:6464,fd00::c0a8:64c8,24h  # IPv6 DHCP-Adressbereich und Lease-Zeit
 enable-ra # Router Advertisement (RA) einschalten
 dhcp-authoritative # authoritative DHCP mode (optional)
+# static ip für einzelne server
+dhcp-host=08:00:27:7a:9d:a7,ubuntu2204server01,192.168.100.101
+dhcp-host=08:00:27:7a:9d:a7,ubuntu2204server01,[fd00::c0a8:6465]
 
+# LAN 2
 interface=enp0s9  # 2. Schnittstelle, auf der dnsmasq lauscht
+domain-needed
+bogus-priv
+local=/intnet200/
+domain=intnet200
 listen-address=127.0.0.1  # IP-Adresse, auf der dnsmasq lauscht (lokal)
 listen-address=192.168.200.1  # IP-Adresse des LAN-Interfaces
 listen-address=fd00::c0a8:c801  # IPv6-Adresse des LAN-Interfaces
 dhcp-range=192.168.200.100,192.168.200.200,24h  # IPv4 DHCP-Adressbereich und Lease-Zeit
-dhcp-range=fd00::c0a8:c801,fd00::c0a8:c8ff,24h  # IPv6 DHCP-Adressbereich und Lease-Zeit
-enable-ra # Router Advertisement (RA) einschalten
-dhcp-authoritative # authoritative DHCP mode (optional)
+dhcp-range=fd00::c0a8:c864,fd00::c0a8:c8c8,24h  # IPv6 DHCP-Adressbereich und Lease-Zeit
+enable-ra
+dhcp-authoritative
 ```
 Speichere die Datei und starte dnsmasq neu, damit die Änderungen wirksam werden:
 ```
@@ -138,74 +153,3 @@ dnsmasq --test
 # dnsmasq neu starten:
 systemctl restart dnsmasq
 ```
-meine Konfiguration enthält zusätzlich noch Festlegungen zur lokalen Domain und vergibt feste IP-Adressen für einen Server im LAN 1:
-```
-# LAN 1
-interface=enp0s8
-domain-needed
-bogus-priv
-local=/intnet100/
-domain=intnet100
-listen-address=127.0.0.1
-listen-address=192.168.100.1
-listen-address=fd00::c0a8:6401
-dhcp-range=192.168.100.100,192.168.100.200,24h
-dhcp-range=fd00::c0a8:6401,fd00::c0a8:64ff,24h
-enable-ra
-dhcp-authoritative
-# static ip für einzelnen Server im LAN Subnetz
-dhcp-host=08:00:27:7a:9d:a7,ubuntu2204server01,192.168.100.101
-dhcp-host=08:00:27:7a:9d:a7,ubuntu2204server01,[fd00::c0a8:6465]
-
-# LAN 2
-interface=enp0s9
-domain-needed
-bogus-priv
-local=/intnet200/
-domain=intnet200
-listen-address=127.0.0.1
-listen-address=192.168.200.1
-listen-address=fd00::c0a8:c801
-dhcp-range=192.168.200.100,192.168.200.200,24h
-dhcp-range=fd00::c0a8:c801,fd00::c0a8:c8ff,24h
-enable-ra
-dhcp-authoritative
-```
-#### Probleme mit ipv6
-Durch Einfügen von:  
-`enable-ra`  
-`dhcp-authoritative`  
-sollte das Folgende behoben sein:  
-Damit die Cients ihre "fd00:xxxxxxx" Adressen vom dnsmasq DHCP Server beziehen, muss ich auf den Clients jeweils `dhclient -6 -v enp0s3` durchführen. Da fehlt noch was in der Konfiguration des Routers.    
-Alternativ kann ich auf dem Router auch `radvd` installieren:
-```
-apt install radvd
-```
-und eine Konfigurationsdatei anlegen:
-```
-tori@debianRouter:~$ cat /etc/radvd.conf
-interface enp0s8
-{
-    AdvSendAdvert on;
-    prefix fd00::/64
-    {
-        AdvOnLink on;
-        AdvAutonomous on;
-    };
-};
-
-interface enp0s9
-{
-    AdvSendAdvert on;
-    prefix fd00::/64
-    {
-        AdvOnLink on;
-        AdvAutonomous on;
-    };
-};
-```
-und anschließend:
-```
-systemctl restart radvd.service
-```
-Allerdings werden damit die `FD00` Adressen von dnsmasq überschrieben. Die gleichzeitige Verwendung von dnsmasq und radvd für IPV6 scheint keine gute Idee zu sein?
