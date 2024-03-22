@@ -172,7 +172,7 @@ enable-ra
 dhcp-authoritative
 ```
 #### Probleme mit ipv6
-Durch Einfügen von:
+Durch Einfügen von:  
 `enable-ra`  
 `dhcp-authoritative`  
 sollte das Folgende behoben sein:  
