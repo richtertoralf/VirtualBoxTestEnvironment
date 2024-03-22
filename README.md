@@ -160,3 +160,40 @@ dnsmasq --test
 # dnsmasq neu starten:
 systemctl restart dnsmasq
 ```
+**Hier nochmal eine kurze Zusammenfassung der Konfiguration:**   
+**LAN 1:**  
+Die IPv4-Adresse für das LAN-Interface ist 192.168.100.1, und der DHCP-Bereich ist von 192.168.100.100 bis 192.168.100.200.  
+Anzahl der Adressen = 192.168.100.200 - 192.168.100.100 + 1 = 101 Adressen  
+Die IPv6-Adresse für das LAN-Interface ist fd00::c0a8:6401, und der DHCP-Bereich ist im fd00::c0a8:6464 bis fd00::c0a8:64c8 Bereich.  
+Der Bereich fd00::c0a8:6464 bis fd00::c0a8:64c8 enthält 193 Adressen.  
+Diese Adressen gehören zum Unique Local Address (ULA)-Bereich und sind für private IPv6-Netzwerke bestimmt.  
+**LAN 2:**  
+Die IPv4-Adresse für das LAN-Interface ist 192.168.200.1, und der DHCP-Bereich ist von 192.168.200.100 bis 192.168.200.200.  
+Die IPv6-Adresse für das LAN-Interface ist fd00::c0a8:c801, und der DHCP-Bereich ist im fd00::c0a8:c864 bis fd00::c0a8:c8c8 Bereich.
+
+wichtig ist außerdem:  
+
+**enable-ra - Router Advertisement (RA) einschalten**  
+
+Diese Option aktiviert das Senden von Router Advertisements (RA) für IPv6 im Netzwerk. RA-Nachrichten sind wichtig für IPv6-Netzwerke, da sie Clients darüber informieren, dass ein Router verfügbar ist und welche Adresskonfigurationsparameter (wie z. B. die Präfixlänge) verwendet werden sollen. RA-Nachrichten sind für den ordnungsgemäßen Betrieb von IPv6-Netzwerken unerlässlich, insbesondere wenn Stateless Address Autoconfiguration (SLAAC) verwendet wird, um IPv6-Adressen automatisch zuzuweisen.  
+
+**dhcp-authoritative - authoritative DHCP mode (optional)**  
+
+Diese Option gibt dnsmasq die letzte Autorität für DHCP-Anfragen auf dem jeweiligen Interface. Wenn mehr als ein DHCP-Server im Netzwerk vorhanden ist, könnte es zu Konflikten kommen, wenn beide Server auf Anfragen antworten. Durch die Verwendung des dhcp-authoritative-Flags stellt dnsmasq sicher, dass seine Antworten auf DHCP-Anfragen priorisiert werden. Dies ist besonders wichtig, wenn dnsmasq als zentraler DHCP-Server in Ihrem Netzwerk verwendet wird, um sicherzustellen, dass die Konfiguration einheitlich ist und um Konflikte mit anderen DHCP-Servern zu vermeiden.  
+
+**domain-needed**  
+
+Diese Option stellt sicher, dass dnsmasq nur auf Anfragen antwortet, die eine Domain enthalten. Das bedeutet, dass dnsmasq nur auf Anfragen reagiert, die einen vollständig qualifizierten Domainnamen (FQDN) enthalten, und nicht auf einzelne Hostnamen ohne Domain. Dies hilft, das unerwartete Auftreten von DNS-Anfragen für ungültige Domains zu reduzieren und sicherzustellen, dass nur gültige DNS-Anfragen beantwortet werden.  
+
+**bogus-priv**  
+
+Diese Option verhindert, dass dnsmasq Antworten auf Anfragen für private IP-Bereiche liefert. DNS-Anfragen für private IP-Adressen sollten normalerweise nicht von externen DNS-Servern beantwortet werden, da dies potenzielle Sicherheitsrisiken darstellen kann. Die bogus-priv-Option sorgt dafür, dass dnsmasq solche Anfragen blockiert und nur auf Anfragen für öffentliche Domains antwortet.  
+
+**local=/intnet100/**  
+
+Diese Einstellung definiert eine lokale DNS-Domäne für Ihr Netzwerk. Der Parameter /intnet100/ gibt an, dass alle Hosts in Ihrem Netzwerk unterhalb dieser Domainnamenshierarchie organisiert sind. Zum Beispiel wird ein Host mit dem Namen host1 unter der Domain host1.intnet100 erreichbar sein. Dies ist nützlich für die interne Namensauflösung innerhalb Ihres lokalen Netzwerks.  
+
+**domain=intnet100**  
+
+Diese Einstellung legt die Standard-Domain für unvollständige Hostnamen fest. Wenn eine DNS-Anfrage einen unvollständigen Hostnamen enthält (zum Beispiel host1 anstelle von host1.intnet100), wird dnsmasq automatisch die intnet100-Domain anhängen, um den vollständigen FQDN zu bilden. Dies erleichtert die Namensauflösung, indem die Angabe der vollständigen Domäne vermieden wird.  
+Insgesamt dienen diese Einstellungen dazu, die DNS-Namensauflösung in Ihrem lokalen Netzwerk zu verbessern, indem sie sicherstellen, dass nur gültige DNS-Anfragen beantwortet werden, und indem sie die interne Namensauflösung durch die Definition einer lokalen Domain erleichtern.  
