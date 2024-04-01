@@ -128,13 +128,16 @@ domain-needed
 bogus-priv
 local=/intnet100/
 domain=intnet100
-listen-address=127.0.0.1  # IP-Adresse, auf der dnsmasq lauscht (lokal)
 listen-address=192.168.100.1  # IP-Adresse des LAN-Interfaces
 listen-address=fd00::c0a8:6401  # IPv6-Adresse des LAN-Interfaces
-dhcp-range=192.168.100.100,192.168.100.200,24h  # IPv4 DHCP-Adressbereich und Lease-Zeit
-dhcp-range=fd00::c0a8:6464,fd00::c0a8:64c8,24h  # IPv6 DHCP-Adressbereich und Lease-Zeit
-enable-ra # Router Advertisement (RA) einschalten
-dhcp-authoritative # authoritative DHCP mode (optional)
+dhcp-range=enp0s8,192.168.100.100,192.168.100.200,24h  # IPv4 DHCP-Adressbereich und Lease-Zeit
+dhcp-range=enp0s8,fd00::c0a8:6464,fd00::c0a8:64c8,24h  # IPv6 DHCP-Adressbereich und Lease-Zeit
+enable-ra
+# dhcp-option für LAN 1 (IPv4 und IPv6)
+dhcp-option=enp0s8,option:dns-server,192.168.100.1
+dhcp-option=enp0s8,option:dns-server,[fd00::c0a8:6401]
+dhcp-option=enp0s8,option:router,192.168.100.1
+dhcp-option=enp0s8,option:router,[fd00::c0a8:6401]
 # static ip für einzelne server
 dhcp-host=08:00:27:7a:9d:a7,ubuntu2204server01,192.168.100.101
 dhcp-host=08:00:27:7a:9d:a7,ubuntu2204server01,[fd00::c0a8:6465]
@@ -145,13 +148,16 @@ domain-needed
 bogus-priv
 local=/intnet200/
 domain=intnet200
-listen-address=127.0.0.1  # IP-Adresse, auf der dnsmasq lauscht (lokal)
 listen-address=192.168.200.1  # IP-Adresse des LAN-Interfaces
 listen-address=fd00::c0a8:c801  # IPv6-Adresse des LAN-Interfaces
-dhcp-range=192.168.200.100,192.168.200.200,24h  # IPv4 DHCP-Adressbereich und Lease-Zeit
-dhcp-range=fd00::c0a8:c864,fd00::c0a8:c8c8,24h  # IPv6 DHCP-Adressbereich und Lease-Zeit
+dhcp-range=enp0s9,192.168.200.100,192.168.200.200,24h  # IPv4 DHCP-Adressbereich und Lease-Zeit
+dhcp-range=enp0s9,fd00::c0a8:c864,fd00::c0a8:c8c8,24h  # IPv6 DHCP-Adressbereich und Lease-Zeit
 enable-ra
-dhcp-authoritative
+# dhcp-option für LAN 2 (IPv4 und IPv6)
+dhcp-option=enp0s9,option:dns-server,192.168.200.1
+dhcp-option=enp0s9,option:dns-server,[fd00::c0a8:c801]
+dhcp-option=enp0s9,option:router,192.168.200.1
+dhcp-option=enp0s9,option:router,[fd00::c0a8:c801]
 ```
 Speichere die Datei und starte dnsmasq neu, damit die Änderungen wirksam werden:
 ```
